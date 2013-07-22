@@ -1,6 +1,6 @@
 # analyse.io
 ## Introduction
-analse.io is a simple application to analyse the sentiment of twitter status updates, defined in specific geographical region.
+analyse.io is a simple application to analyse the sentiment of twitter status updates, defined in a specific geographical region.
 
 Author: Michael Birsak  
 Contact: [michael@birsak.net](mailto:michael@birsak.net) / [mb1668@live.mdx.ac.uk](mailto:mb1668@live.mdx.ac.uk)
