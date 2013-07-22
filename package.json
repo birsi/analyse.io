@@ -1,0 +1,27 @@
+{
+  "name": "analyse.io",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Michael Birsak <michael@birsak.net>",
+  "description": "a simple application",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nodejitsu/http-server.git"
+  },
+  "dependencies" : {
+    "colors"   :  "*",
+    "express": "3.3.4",
+    "socket.io" : "0.9.16",
+    "ejs": "*",
+    "twit": "1.1.8",
+    "async": "0.2.9",
+    "mongoose": "3.6.15"
+  },
+  "devDependencies": {
+    "mocha"    :  "1.12.x"
+  },
+  "license": "MIT"
+}
