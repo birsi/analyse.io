@@ -3,7 +3,7 @@
 analse.io is a simple application to analyse the sentiment of twitter status updates, defined in specific geographical region.
 
 Author: Michael Birsak  
-Contact: [michael@birsak.net] / [mb1668@live.mdx.ac.uk]
+Contact: [michael@birsak.net](mailto:michael@birsak.net) / [mb1668@live.mdx.ac.uk](mailto:mb1668@live.mdx.ac.uk)
 
 Version: 0.0.1  
 Date: 22/07/2013
