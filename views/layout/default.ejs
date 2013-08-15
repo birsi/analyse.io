@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= title %></title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <div class="container">
+
+          <!-- .navbar-toggle is used as the toggle for collapsed navbar content -->
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+
+          <!-- Be sure to leave the brand out there if you want it shown -->
+          <a class="navbar-brand" href="/">analyse.io</a>
+
+          <!-- Place everything within .nav-collapse to hide it until above 768px -->
+          <div class="nav-collapse collapse navbar-responsive-collapse">
+            <% if(typeof userLoggedIn === "undefined" || userLoggedIn.name === '') { %>
+            <a href="/login" class="btn btn-default navbar-btn pull-right">Sign in</a>
+            <% } else { %>
+            <ul class="nav navbar-nav">
+              <li <% if(title === "Analyse") { %> class="active" <% } %> ><a href="/analyse">Analyse</a></li>
+              <li class="disabled"><a href="#">Archive</a></li>
+              <li <% if(title === "Profile") { %> class="active" <% } %> ><a href="/profile">Profile</a></li>
+            </ul>
+            <p class="navbar-text pull-right">
+              Signed in as <a href="/profile" class="navbar-link"><%= userLoggedIn.name %></a> | <a href="/logout">Logout</a>
+            </p>
+            <% } %>
+          </div><!-- /.nav-collapse -->
+        </div><!-- /.container -->
+      </div><!-- /.navbar -->
+    </header>
+    <%- body %>
+  </body>
+
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+  </body>
+</html>

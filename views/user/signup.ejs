@@ -1,0 +1,31 @@
+<% layout('../layout/default') %>
+<div class="container">
+    <div class="panel login-panel">
+      <div class="panel-heading"><h3 class="panel-title">Create an account</h3></div>
+      <form action="/signup" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrf_token %>">
+          <fieldset>
+            <div class="form-group">
+              <input type="text" class="form-control" name="name" id="name" placeholder="Name" value="<%= user.name %>" >
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" name="email" id="email" placeholder="Email" value="<%= user.email %>" >
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" name="password" id="password" placeholder="Password" >
+            </div>
+            <a href="/login" class="btn btn-default">Back</a>
+            <span class="pull-right">
+                <button type="submit" class="btn btn-primary">Sign up</button>
+            </span>
+          </fieldset>
+        </form>
+        <% if(typeof errors !== 'undefined') { %>
+          <div style="margin-top: 15px; color: red;">
+              <% for(var i in errors) { %>
+              <%= errors[i] %><br>
+              <% } %>
+          </div>
+        <% } %>
+    </div>
+</div>

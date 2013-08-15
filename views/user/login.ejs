@@ -1,0 +1,27 @@
+<% layout('../layout/default') %>
+<div class="container">
+    <div class="panel login-panel">
+      <div class="panel-heading"><h3 class="panel-title">Login to analyse.io</h3></div>
+      <form action="/login" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrf_token %>">
+          <fieldset>
+            <div class="form-group">
+              <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+            </div>
+            <div class="form-group input-group">
+              <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+              <span class="input-group-addon"><a href="/forgot_password">?</a></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+            <a href="/auth/twitter" class="btn btn-info">Login with twitter</a>
+            <span class="pull-right">
+                <a href="/signup" class="btn btn-default">Sign up</a>
+            </span>
+          </fieldset>
+        </form>
+        <div style="margin-top: 15px; color: red;">
+          <%= message %>
+
+        </div>
+    </div>
+</div>

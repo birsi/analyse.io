@@ -1,0 +1,46 @@
+<% layout('../layout/default') %>
+<div class="container">
+    <h1>
+        <% if(typeof user.twitter !== "undefined") { %>
+        <img style="vertical-align: bottom" src="<%= user.twitter.profile_image_url %>">
+        <% } %>
+        <%= user.name %>
+    </h1>
+    <div class="row">
+        <div class="col-6">
+            <form action="/profile" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrf_token %>">
+                <fieldset>
+                <legend>Edit your profile</legend>
+                <% if(typeof messages !== 'undefined') { %>
+                    <% if(messages.length) { %>
+                    <div class="alert" style="margin-top: 10px;">
+                    <%= messages %>
+                    </div>
+                    <% } %>
+                <% } %>
+                <% if(typeof errors !== 'undefined') { %>
+                  <div class="alert alert-danger" style="margin-top: 10px;">
+                      <% for(var i in errors) { %>
+                      <%= errors[i] %><br>
+                      <% } %>
+                  </div>
+                <% } %>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>">
+                </div>
+                <% if(user.provider === 'local') { %>
+                <div class="form-group">
+                    <label for="password">New Password</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                    <p class="help-block">Leave empty if you don't want to change your password</p>
+                </div>
+                <% } %>
+                <button type="submit" class="btn btn-default">Submit</button>
+                <a href="/delete" class="pull-right btn btn-danger">Delete profile</a>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

@@ -3,22 +3,32 @@
   "version": "0.0.1",
   "private": true,
   "author": "Michael Birsak <michael@birsak.net>",
-  "description": "a simple application",
+  "description": "A Real-time big data stream analysis application",
   "scripts": {
     "start": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nodejitsu/http-server.git"
+    "url": "https://bitbucket.org/birsi/analyse.io"
   },
   "dependencies" : {
     "colors"   :  "*",
     "express": "3.3.4",
     "socket.io" : "0.9.16",
     "ejs": "*",
-    "twit": "1.1.8",
+    "ejs-locals": "*",
+    "twit": "1.1.9",
     "async": "0.2.9",
-    "mongoose": "3.6.15"
+    "mongoose": "3.6.15",
+    "passport": "*",
+    "passport-local": "*",
+    "passport-twitter": "*",
+    "connect-flash": "*",
+    "connect-mongo": "*",
+    "bcrypt": "*",
+    "nodemailer" : "*",
+    "sentiment" : "*",
+    "moment" : "*"
   },
   "devDependencies": {
     "mocha"    :  "1.12.x"

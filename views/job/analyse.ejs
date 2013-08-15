@@ -1,0 +1,214 @@
+<% layout('../layout/default') %>
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <h3 class="remove-margin">Settings</h3>
+            <div class="panel settings-panel">
+                <div class="panel-heading">
+                    Job settings
+                </div>
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" class="form-control" id="location" name="location" placeholder="Location" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="keywords">Keywords</label>
+                    <input type="text" class="form-control" id="keywords" name="keywords" placeholder="Keywords" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="timer">Job timer</label>
+                    <input type="range" id="timer" name="timer" min="1" max="24" step="1"
+                    <% if(timer.stop) { %>
+                        value="<%= timer.stop %>"
+                    <% } else { %>
+                        value="1"
+                    <% } %>
+                    style="float:right;" onchange="printValue('timer','timerValue')">
+                    <input type="text" id="timerValue" class="form-control"
+                    <% if(timer.stop) { %>
+                        value="<%= timer.stop %> hour(s)"
+                    <% } else { %>
+                        value="1 hour(s)"
+                    <% } %>
+                    disabled>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <div>
+                    Start:
+                    <% if(timer.formattedStart) { %>
+                        <span id="timerStart"><%= timer.formattedStart %></span>
+                    <% } else { %>
+                        <span id="timerStart">Job not started</span>
+                    <% } %>
+                    </div>
+                    <div>
+                    End:
+                    <% if(timer.formattedStop) { %>
+                        <span id="timerStop"><%= timer.formattedStop %></span>
+                    <% } else { %>
+                        <span id="timerStop">Job end not defined</span>
+                    <% } %>
+                    </div>
+                </div>
+                <a href="#" id="start" class="btn btn-success">Start</a>
+                <a href="#" id="pause" class="btn btn-info">Pause</a>
+                <a href="#" id="reset" class="btn btn-danger">Reset</a>
+            </div>
+            <div class="panel">
+                <div class="panel-heading">
+                    Statistics
+                </div>
+                <div>
+                    Analysed tweets:
+                    <span id="tweetCount" style="font-weight: bold"><% if(sentimentData !== null) {%><%= sentimentData.tweetCount %><% } %></span><br>
+                    Positive tweets:
+                    <span id="positiveTweets" style="font-weight: bold; color: green">
+                    <% if(sentimentData !== null) {%>
+                        <%= sentimentData.positiveTweets %>
+                        (<script> document.write(((100 / <%= sentimentData.tweetCount %>) *  <%= sentimentData.positiveTweets %>).toFixed(2)); </script>%)
+                    <% } %>
+                    </span><br>
+                    Neutral tweets:
+                    <span id="neutralTweets" style="font-weight: bold">
+                    <% if(sentimentData !== null) {%>
+                        <%= sentimentData.neutralTweets %>
+                        (<script> document.write(((100 / <%= sentimentData.tweetCount %>) *  <%= sentimentData.neutralTweets %>).toFixed(2)); </script>%)
+                    <% } %>
+                    </span><br>
+                    Negative tweets:
+                    <span id="negativeTweets" style="font-weight: bold; color: red">
+                    <% if(sentimentData !== null) {%>
+                        <%= sentimentData.negativeTweets %>
+                        (<script> document.write(((100 / <%= sentimentData.tweetCount %>) *  <%= sentimentData.negativeTweets %>).toFixed(2)); </script>%)
+                    <% } %>
+                    </span><br>
+                    Sentiment score positive:
+                    <span id="sentimentScorePositive" style="font-weight: bold; color: green;"><% if(sentimentData !== null) {%><%= sentimentData.sentimentScorePositive %><% } %></span><br>
+                    Sentiment score difference:
+                    <span id="sentimentScore" style="font-weight: bold"><% if(sentimentData !== null) {%><%= sentimentData.sentimentScore %><% } %></span><br>
+                    Senitment score negative:
+                    <span id="sentimentScoreNegative" style="font-weight: bold; color: red;"><% if(sentimentData !== null) {%><%= sentimentData.sentimentScoreNegative %><% } %></span><br>
+                    Sentiment comparative:
+                    <span id="sentimentComparative" style="font-weight: bold"><% if(sentimentData !== null) {%><%= sentimentData.sentimentComparative.toFixed(2) %><% } %></span><br>
+                    Sentiment score per tweet:
+                    <span id="sentimentScorePerTweet" style="font-weight: bold"><% if(sentimentData !== null) {%><%= sentimentData.sentimentScorePerTweet.toFixed(2) %><% } %></span><br>
+                </div>
+            </div>
+        </div>
+        <div class="col-9" style="height: 600px; overflow: scroll;">
+            <h3 class="remove-margin" style="margin-bottom: 25px;">Current Job Status: <span id="jobStatus"><%= status %></span></h3>
+            <div id="job-results">
+                <% for(var i in streamData) { %>
+                    <%
+                        if(streamData[i].sentiment.score > 0) {
+                            color = 'green';
+                        } else if(streamData[i].sentiment.score < 0) {
+                            color = 'red';
+                        } else {
+                            color = 'black';
+                        }
+                    %>
+                    <span style="color: <%= color %>"><b><%= streamData[i].sentiment.score %> | <%= streamData[i].user.name %> says:</b> <%= streamData[i].text %></span><br>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect('http://dev.birsak.net');
+
+    socket.on('connect', function() {
+        socket.emit('setUserData', {
+            userId: '<%= user.id %>'
+        });
+    });
+
+    socket.on('tweet', function(data) {
+        var user = data.user.name;
+        var text = data.text;
+        var sentiment = data.sentiment.score;
+        if(sentiment > 0) {
+            var color = 'green';
+        } else if(sentiment < 0) {
+            var color = 'red';
+        } else {
+            var color = 'black';
+        }
+        var tweetString = '<span style="color: '+color+'"><b>' + sentiment + ' | ' + user + ' says:</b> ' + text + '</span><br>' + $('#job-results').html();
+        $('#job-results').html(tweetString);
+    });
+
+    socket.on('statistics', function(data) {
+        var posPer = ((100 / data.tweetCount) * data.positiveTweets).toFixed(2);
+        var negPer = ((100 / data.tweetCount) * data.negativeTweets).toFixed(2);
+        var neuPer = ((100 / data.tweetCount) * data.neutralTweets).toFixed(2);
+        $('#tweetCount').html(data.tweetCount);
+        $('#positiveTweets').html(data.positiveTweets + " (" + posPer + "%)");
+        $('#neutralTweets').html(data.neutralTweets + " (" + neuPer + "%)");
+        $('#negativeTweets').html(data.negativeTweets + " (" + negPer + "%)");
+        $('#sentimentScorePerTweet').html(data.sentimentScorePerTweet.toFixed(2));
+        $('#sentimentScore').html(data.sentimentScore);
+        $('#sentimentScorePositive').html(data.sentimentScorePositive);
+        $('#sentimentScoreNegative').html(data.sentimentScoreNegative);
+        $('#sentimentComparative').html(data.sentimentComparative.toFixed(2));
+    });
+
+    // Reset
+    socket.on('reset', function() {
+        $('#jobStatus').html('Not started');
+        $('#timerStart').html('Job not started');
+        $('#timerStop').html('Job end not defined');
+        $('#timer').val('1');
+        $('#timerValue').val('1 hour(s)');
+        $('#job-results').html('');
+        $('#tweetCount').html('0');
+        $('#positiveTweets').html('0');
+        $('#neutralTweets').html('0');
+        $('#negativeTweets').html('0');
+        $('#sentimentScorePerTweet').html('0');
+        $('#sentimentScore').html('0');
+        $('#sentimentScorePositive').html('0');
+        $('#sentimentScoreNegative').html('0');
+        $('#sentimentComparative').html('0');
+    });
+
+    socket.on('timerChanged', function(data) {
+        if(data.formattedStart) {
+            $('#timerStart').html(data.formattedStart);
+        } else {
+            $('#timerStart').html("Job not started");
+        }
+        $('#timerStop').html(data.formattedStop);
+    });
+
+    socket.on('statusChanged', function(data) {
+        $('#jobStatus').html(data);
+    });
+
+
+    $('#start').on('click', function() {
+        socket.emit('start');
+    });
+
+    $('#pause').on('click', function() {
+        socket.emit('stop');
+    });
+
+    $('#reset').on('click', function() {
+        socket.emit('reset');
+    });
+
+    $('#timer').on('change', function() {
+        var timer = $(this).val();
+        socket.emit('timerChanged', timer);
+    });
+
+    function printValue(sliderID, textbox) {
+        var x = document.getElementById(textbox);
+        var y = document.getElementById(sliderID);
+        x.value = y.value + " hour(s)";
+    }
+
+</script>

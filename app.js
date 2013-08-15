@@ -1,37 +1,74 @@
+/**!
+ * analyse.io
+ *
+ * app.js
+ * Main application setup
+ * Initializes the app and all dependend configurations
+ *
+ * @author Michael Birsak
+ * @date 05/08/2013
+ **/
 
 /**
- * Module dependencies.
- */
-
+ *   Module dependencies
+ **/
 var express = require('express'),
-	routes = require('./routes'),
-	user = require('./routes/user'),
-	http = require('http'),
-	path = require('path');
+    app = express(),
+    server = require('http').createServer(app),
+    io = require('socket.io').listen(server, {log: true}),
+    passport = require('passport'),
+    mongoose = require('mongoose'),
+    colors = require('colors');
 
-var app = express();
+/**
+ *    Define environment & config
+ **/
+var environment = process.env.NODE_ENV || 'development',
+    config = require('./config/config')[environment];
 
-// all environments
-app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
-app.use(express.session());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+/**
+ *   Establish MongoDB connection
+ **/
+mongoose.connect(config.db);
 
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-}
+/**
+ *   Include models
+ **/
+var modelsPath = __dirname + '/models/';
+require(modelsPath + 'user');
+require(modelsPath + 'job');
 
-app.get('/', routes.index);
-app.get('/users', user.list);
+/**
+ *   Setup controllers
+ **/
+var controllersPath = __dirname + '/controllers/',
+    userController = require(controllersPath + 'userController');
+    jobController = require(controllersPath + 'jobController')(io, config);
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+/**
+ *   Include passport auth config
+ */
+require('./config/passport')(app, passport, config);
+
+/**
+ *   Include express config
+ **/
+require('./config/express')(app, passport, config);
+
+/**
+ *   Include application routes
+ **/
+var routesPath = __dirname + '/routes/';
+require(routesPath + 'index')(app);
+require(routesPath + 'user')(app, passport, userController);
+require(routesPath + 'job')(app, passport, jobController);
+
+/**
+ *   Application startup
+ **/
+server.listen(app.get('port'), function() {
+    console.log('\n-----------------------------------------------\n'.rainbow +
+                'Analyse.io is up and running on port '.bold.green + 80 + '\n' +
+                '-----------------------------------------------\n'.rainbow);
 });
+
