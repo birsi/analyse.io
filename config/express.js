@@ -50,7 +50,9 @@ module.exports = function(app, passport, config) {
     app.use(express.session({
         secret: 'analyseiosecrettest',
         store: new mongoStore({
-            url: config.db,
+            url: config.db.host,
+            username: config.db.user,
+            password: config.db.pass,
             collection: 'sessions',
             auto_reconnect: true
         })

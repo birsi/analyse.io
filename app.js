@@ -29,7 +29,10 @@ var environment = process.env.NODE_ENV || 'development',
 /**
  *   Establish MongoDB connection
  **/
-mongoose.connect(config.db);
+mongoose.connect(config.db.host, {
+    user: config.db.user,
+    pass: config.db.pass
+});
 
 /**
  *   Include models
