@@ -1,0 +1,46 @@
+<% layout('../layout/default') %>
+<div class="container">
+    <div class="row">
+        <% if(message.length > 0) { %>
+        <div class="alert alert-danger"><b>Oh snap!</b> <%= message %></div>
+        <% } %>
+        <div class="col-3">
+            <h3 class="remove-margin">Create a new Job</h3>
+            <div class="panel settings-panel">
+                <div class="panel-heading">
+                    Settings
+                </div>
+                <form action="/job/create" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrf_token %>">
+                <input type="hidden" id="coordinates" name="coordinates">
+                <input type="hidden" id="location-title" name="locationTitle">
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" class="form-control" id="location" placeholder="Location">
+                </div>
+                <div class="form-group">
+                    <label for="keywords">Keywords</label>
+                    <input type="text" class="form-control" id="keywords" name="keywords" placeholder="Keywords" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="timer">Job timer</label>
+                    <input type="range" id="timer" name="timer" min="1" max="24" step="1" value="1" style="float:right;" onchange="printValue('timer','timerValue')">
+                    <input type="text" id="timerValue" class="form-control" value="1 hour(s)" disabled>
+                </div>
+                <input type="submit" class="btn btn-success" value="Create new job">
+            </div>
+        </div>
+        <div class="col-9">
+            <div id="map" class="map"></div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/coordinates.js"></script>
+<script>
+function printValue(sliderID, textbox) {
+    var x = document.getElementById(textbox);
+    var y = document.getElementById(sliderID);
+    x.value = y.value + " hour(s)";
+}
+</script>

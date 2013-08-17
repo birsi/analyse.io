@@ -19,6 +19,17 @@ var auth = require('./authorization.js');
 module.exports = function(app, passport, jobController) {
 
     // Job get routes
-    app.get('/analyse', auth.isAuthenticated, jobController.analyse)
+    app.get('/job/list', auth.isAuthenticated, jobController.list);
+    app.get('/job/create', auth.isAuthenticated, jobController.create);
+    app.get('/job/archive', auth.isAuthenticated, jobController.archive);
+    app.get('/job/archive/view/:jobId', auth.isAuthenticated, jobController.archiveView);
+    app.get('/job/archive/delete/:jobId', auth.isAuthenticated, jobController.archiveDelete);
+    app.get('/job/save/:workerId', auth.isAuthenticated, jobController.save);
+    app.get('/job/delete/:workerId', auth.isAuthenticated, jobController.delete);
+    app.get('/job/view/:workerId', auth.isAuthenticated, jobController.view);
+    app.get('/job/getJSON/:workerId', auth.isAuthenticated, jobController.getJSON);
+
+    // Job post routes
+    app.post('/job/create', auth.isAuthenticated, jobController.create);
 
 };

@@ -48,13 +48,15 @@ module.exports = function(app, passport, config) {
 
     // Save the express session in the MongoDB
     app.use(express.session({
-        secret: 'analyseiosecrettest',
+        secret: 'analyseiosecret1337',
+        cookie: { maxAge: 24 * 60 * 60 * 1000 },
         store: new mongoStore({
             url: config.db.host,
             username: config.db.user,
             password: config.db.pass,
             collection: 'sessions',
-            auto_reconnect: true
+            auto_reconnect: true,
+            clear_interval: 3600
         })
     }));
 
@@ -77,7 +79,7 @@ module.exports = function(app, passport, config) {
         next();
     });
 
-    // Middleware function to expose the user name to all views
+    // Middleware function to expose the user to all views
     app.use(function(req,res,next){
         if(typeof req.user !== 'undefined') {
             res.locals.userLoggedIn = req.user;

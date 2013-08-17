@@ -1,3 +1,14 @@
+## v0.0.3 - 17/08/2013
+- **Added mongoDB authorization**
+- **Changed session expires to 1day**
+- **Implemented full job model**
+- **Refactored the whole application**
+- **Added support for multiple workers**
+- **Implemented separate job creation/view**
+- **Added view and archive feature**
+- **Updated user model email validation**
+- **Implemented job db storage**
+
 ## v0.0.2 - 15/08/2013
 - **First prototype version published**
 - **Updated file/folder structure**

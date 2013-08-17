@@ -15,7 +15,7 @@
 var express = require('express'),
     app = express(),
     server = require('http').createServer(app),
-    io = require('socket.io').listen(server, {log: true}),
+    io = require('socket.io').listen(server, {log: false}),
     passport = require('passport'),
     mongoose = require('mongoose'),
     colors = require('colors');

@@ -1,0 +1,79 @@
+<% layout('../layout/default') %>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <% if(message.length > 0) { %>
+            <div class="alert alert-danger"><b>Oh snap!</b> <%= message %></div>
+            <% } %>
+            <h3>View your current jobs</h3>
+            <% if(workers === null) { %>
+            <h4 style="margin-top: 50px;">You don't have any jobs running ... :(</h4>
+            <a href="/job/create" class="btn btn-success">Create one!</a>
+            <% } else { %>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>#ID</th>
+                        <th>Status</th>
+                        <th>Start Time</th>
+                        <th>Stop Time</th>
+                        <th>Tweets</th>
+                        <th>Positive</th>
+                        <th>Negative</th>
+                        <th>Neutral</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(var i in workers) { %>
+                    <tr>
+                        <td>
+                            <a href="/job/view/<%= workers[i].id %>" class="btn btn-info">View</a>
+                            <button type="button" data-toggle="modal" class="btn btn-danger confirm-delete" data-id="<%= workers[i].id %>">Delete</button>
+                        </td>
+                        <td><%= workers[i].id %></td>
+                        <td><%= workers[i].status %></td>
+                        <td><%= workers[i].timer.formattedStart %></td>
+                        <td><%= workers[i].timer.formattedStop %></td>
+                        <td><%= workers[i].sentimentData.tweetCount %></td>
+                        <td style="color: green"><%= workers[i].sentimentData.positiveTweets %></td>
+                        <td style="color: red"><%= workers[i].sentimentData.negativeTweets %></td>
+                        <td style="color: neutral"><%= workers[i].sentimentData.positiveTweets %></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="Delete job" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete job</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the job?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Better not ...</button>
+                <button type="button" id="delete-job-confirm" class="btn btn-danger">Yes, delete it!</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.confirm-delete').on('click', function() {
+        var id = $(this).data('id');
+        $('#delete-modal').data('id', id).modal('show');
+    });
+
+    $('#delete-job-confirm').on('click', function() {
+        var jobId = $('#delete-modal').data('id');
+        window.location.href = '/job/delete/' + jobId;
+    });
+</script>

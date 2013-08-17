@@ -21,28 +21,24 @@ var mongoose = require('mongoose');
 var JobSchema = mongoose.Schema({
 
     user: {
-        type: 'String',
-        default: ''
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
-    start: {
-        type: Date,
-        default: null
+    status: {
+        type: String,
+        default: 'Active'
     },
-    end: {
-        type: Date,
-        default: null
+    filterData: {
+        type: Object
     },
-    location: {
-        type: Array,
-        default: []
+    timer: {
+        type: Object
     },
-    keyword: {
-        type: 'String',
-        default: ''
+    streamData: {
+        type: Object
     },
-    data: {
-        type: Array,
-        default: []
+    sentimentData: {
+        type: Object
     }
 
 });

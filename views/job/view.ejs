@@ -1,0 +1,365 @@
+<% layout('../layout/default') %>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1>Job View</h1>
+            <h5>Status: <span id="top-status"><%= status %></h5>
+            <div class="latest-tweet-score"><span id="latestTweetScore">0</span></div>
+            <div class="job-view">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#job-statistics" data-toggle="tab">Statistics</a></li>
+                    <li><a href="#job-results" data-toggle="tab">Tweets</a></li>
+                    <li><a href="#job-settings" data-toggle="tab">Job Settings</a></li>
+                    <% if(status !== "Finished") { %>
+                    <span id="controls" class="pull-right">
+                        <input type="button" id="start" class="btn btn-success" value="Resume">
+                        <input type="button" id="pause" class="btn btn-info" value="Pause Tracking">
+                        <a href="/job/save/<%= workerId %>" id="save" class="btn btn-danger">Stop & Save</a>
+                    </span>
+                    <% } %>
+                </ul>
+            </div>
+            <div class="tab-content">
+                <div id="job-statistics" class="tab-pane active">
+                    <div class="row">
+                        <div id="pie-chart" class="col-6"></div>
+                        <div id="column-tweets" class="col-6"></div>
+                    </div>
+                    <div class="row" style="margin-top: 30px">
+                        <div id="bar-tweets" class="col-12"></div>
+                    </div>
+                </div>
+                <div id="job-results" class="tab-pane">
+                    <h4>Last 25 Tweets</h4>
+                    <div id="job-tweets" class="well tweets">
+                    <% for(var i in streamData) { %>
+                        <%
+                            // Display only last 25 tweets
+                            if(i ==  25) {
+                                break;
+                            }
+
+                            if(streamData[i].sentiment.score > 0) {
+                                color = 'green';
+                            } else if(streamData[i].sentiment.score < 0) {
+                                color = 'red';
+                            } else {
+                                color = 'black';
+                            }
+                        %>
+                        <div style="color: <%= color %>"><b><%= streamData[i].sentiment.score %> | <%= streamData[i].user.name %> says:</b> <%= streamData[i].text %></div>
+                    <% } %>
+                    </div>
+                </div>
+                <div id="job-settings" class="tab-pane">
+                    <div class="well">
+                        Job ID: <b><%= workerId %></b><br>
+                        Job Status: <b><span id="status"><%= status %></b><br>
+                        Job Start: <b><%= timer.formattedStart %></b><br>
+                        Job End: <b><%= timer.formattedStop %></b><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+    var socket = io.connect('http://dev.birsak.net');
+
+    // Initial connection, set the worker data
+    socket.on('connect', function() {
+        socket.emit('setWorkerData', {
+            workerId: '<%= workerId %>'
+        });
+    });
+
+    // Tweet event
+    socket.on('tweet', function(data) {
+        var user = data.user.name;
+            text = data.text,
+            sentiment = data.sentiment.score;
+
+        if(sentiment > 0) {
+            var color = 'green';
+        } else if(sentiment < 0) {
+            var color = 'red';
+        } else {
+            var color = 'black';
+        }
+
+        // Remove last element if there are more than 25 (So the DOM doesn't explode!)
+        var spanCount = $('#job-tweets > div').length;
+
+        if(spanCount > 24) {
+            var lastSpan = $('#job-tweets > div:last');
+            lastSpan.remove();
+        }
+
+        // Define the new tweetStrings
+        var tweetString = '<div style="color: '+color+'"><b>' + sentiment + ' | ' + user + ' says:</b> ' + text + '</div>' + $('#job-tweets').html();
+        $('#job-tweets').html(tweetString);
+
+        // Latest tweet score
+        var tweetScore = '<span style="color:'+color+'">'+sentiment+'</span>';
+        $('#latestTweetScore').html(tweetScore);
+
+
+    });
+
+    // Status event
+    socket.on('statusChanged', function(data) {
+        $('#status, #top-status').html(data);
+        if(data === "Finished" || data === "Worker timed out") {
+            $('#controls').hide();
+        }
+    });
+
+    // Statistics event
+    socket.on('statistics', function(data) {
+
+        var posPer = (100 / data.tweetCount) * data.positiveTweets,
+            neuPer = (100 / data.tweetCount) * data.neutralTweets,
+            negPer = (100 / data.tweetCount) * data.negativeTweets;
+
+        pieChart.series[0].data[0].update(posPer);
+        pieChart.series[0].data[1].update(neuPer);
+        pieChart.series[0].data[2].update(negPer);
+
+        columnTweets.series[0].data[0].update(data.positiveTweets);
+        columnTweets.series[1].data[0].update(data.neutralTweets);
+        columnTweets.series[2].data[0].update(data.negativeTweets);
+
+        barTweets.series[0].data[0].update(data.positiveTweets);
+        barTweets.series[1].data[0].update(data.neutralTweets);
+        barTweets.series[2].data[0].update(data.negativeTweets);
+        barTweets.series[3].data[0].update(data.tweetCount);
+
+    });
+
+    // Button handler
+    $('#start').on('click', function() {
+        socket.emit('start');
+    });
+
+    // Button handler
+    $('#pause').on('click', function() {
+        socket.emit('pause');
+    });
+
+    // Initial statistics
+    var positivePercentage = (100 / <%= sentimentData.tweetCount %>) * <%= sentimentData.positiveTweets %> || 33,
+        neutralPercentage =  (100 / <%= sentimentData.tweetCount %>) * <%= sentimentData.neutralTweets %> || 33,
+        negativePercentage = (100 / <%= sentimentData.tweetCount %>) * <%= sentimentData.negativeTweets %> || 33,
+        positiveTweets = <%= sentimentData.positiveTweets %> || 0,
+        neutralTweets = <%= sentimentData.neutralTweets %> || 0,
+        negativeTweets = <%= sentimentData.negativeTweets %> || 0,
+        tweetCount = <%= sentimentData.tweetCount %> || 0;
+
+    $(document).ready(function() {
+
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+        //Pie chart
+        pieChart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'pie-chart',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                backgroundColor:'rgba(255, 255, 255, 0.1)'
+            },
+            title: {
+                text: null
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        connectorColor: '#000000',
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Sentimentent percentage',
+                data: [
+                    {
+                        name: 'Positive',
+                        color: '#96C800',
+                        y: positivePercentage,
+                        sliced: true,
+                        selected: true
+                    },
+                    {
+                        name: 'Neutral',
+                        color: '#326897',
+                        y: neutralPercentage
+                    },
+                    {
+                        name: 'Negative',
+                        color: '#C80000',
+                        y: negativePercentage
+                    },
+                ]
+            }]
+        });
+
+        // Column tweets
+        columnTweets = new Highcharts.Chart({
+            chart: {
+                type: 'column',
+                renderTo: 'column-tweets',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                backgroundColor:'rgba(255, 255, 255, 0.1)'
+            },
+            title: {
+                text: null
+            },
+            legend: {
+                enabled: false
+            },
+            yAxis: {
+                title: {
+                    text: 'Tweets'
+                }
+            },
+            xAxis: {
+                labels: {
+                    enabled: false
+                }
+            },
+            plotOptions: {
+                column: {
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        format: '<b>{point.y}</b> {point.name}'
+                    }
+                }
+            },
+            series: [{
+                name: 'Positive',
+                data: [{
+                    name: 'Positive',
+                    y: positiveTweets,
+                    color: '#96C800'
+                }]
+            }, {
+                name: 'Neutral',
+                data: [{
+                    name: 'Neutral',
+                    y: neutralTweets,
+                    color: '#326897'
+                }]
+            }, {
+                name: 'Negative',
+                data: [{
+                    name: 'Negative',
+                    y: negativeTweets,
+                    color: '#C80000'
+                }]
+            }]
+        });
+
+        // Bar tweets
+        barTweets = new Highcharts.Chart({
+            chart: {
+                type: 'bar',
+                renderTo: 'bar-tweets',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                height: 150
+            },
+            title: {
+                text: null
+            },
+            legend: {
+                enabled: false
+            },
+            yAxis: {
+                labels: {
+                    enabled: false
+                },
+                title: {
+                    text: null
+                },
+                gridLineWidth: 0,
+                minorGridLineWidth: 0,
+            },
+            xAxis: {
+                labels: {
+                    enabled: false
+                },
+                title: {
+                    text: null
+                },
+                gridLineWidth: 0,
+                minorGridLineWidth: 0,
+            },
+            plotOptions: {
+                bar: {
+                    stacking: 'percent',
+                    groupPadding: 0.2,
+                    pointPadding: 0,
+                    dataLabels: {
+                        enabled: true,
+                        color: '#fff',
+                        format: '<b>{point.y}</b> {point.name}'
+                    }
+                }
+            },
+            series: [{
+                stack: 0,
+                data: [{
+                    name: 'Positive Tweets',
+                    y: positiveTweets,
+                    color: '#96C800'
+                }]
+            }, {
+                stack: 0,
+                data: [{
+                    name: 'Neutral Tweets',
+                    y: neutralTweets,
+                    color: '#326897'
+                }]
+            }, {
+                stack: 0,
+                data: [{
+                    name: 'Negative Tweets',
+                    y: negativeTweets,
+                    color: '#C80000'
+                }]
+            },
+            {
+                stack: 1,
+                pointWidth: 30,
+                data: [{
+                    name: 'Tweets',
+                    y: tweetCount,
+                    color: '#000'
+                }]
+            }]
+        });
+
+
+
+    });
+
+</script>

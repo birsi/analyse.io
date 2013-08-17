@@ -87,7 +87,7 @@ UserSchema
         }
         // Asynchronous validation to see if a user with this email already exists
         var User = mongoose.model('User');
-        if (this.isNew || this.isModified('email') || email) {
+        if (this.isNew || this.isModified('email')) {
             User.find({
                 email: email
             }).exec(function(err, users) {

@@ -30,8 +30,15 @@
             <a href="/login" class="btn btn-default navbar-btn pull-right">Sign in</a>
             <% } else { %>
             <ul class="nav navbar-nav">
-              <li <% if(title === "Analyse") { %> class="active" <% } %> ><a href="/analyse">Analyse</a></li>
-              <li class="disabled"><a href="#">Archive</a></li>
+              <li class="dropdown <% if(title === "Analyse") { %> active <% } %>" >
+                  <a data-toggle="dropdown" href="#">Analyse <b class="caret"></b></a>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li><a href="/job/create"><b>New</b> - Create a new job</a></li>
+                    <li><a href="/job/list"><b>List</b> - View all active jobs</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/job/archive"><b>Archive</b> - View all saved jobs</a></li>
+                  </ul>
+              </li>
               <li <% if(title === "Profile") { %> class="active" <% } %> ><a href="/profile">Profile</a></li>
             </ul>
             <p class="navbar-text pull-right">
@@ -42,9 +49,10 @@
         </div><!-- /.container -->
       </div><!-- /.navbar -->
     </header>
+
     <%- body %>
-  </body>
 
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+  <script src="/js/plugins.js"></script>
   </body>
 </html>
