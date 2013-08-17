@@ -11,9 +11,9 @@ Date: 17/08/2013
 Version Control: [https://bitbucket.org/birsi/analyseio](https://bitbucket.org/birsi/analyseio)
 
 ##Development
-The current unstable development version is live available at
-** Current live version: 0.0.2 (Prototype) **
-[http://node.birsak.org](http://node.birsak.org)
+The current unstable development version is live available at  
+[http://node.birsak.org](http://node.birsak.org)  
+**Current live version: 0.0.2 (Prototype)**
 
 ##Installation and usage
     // Change to app dir
