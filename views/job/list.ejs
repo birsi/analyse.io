@@ -5,23 +5,24 @@
             <% if(message.length > 0) { %>
             <div class="alert alert-danger"><b>Oh snap!</b> <%= message %></div>
             <% } %>
-            <h3>View your current jobs</h3>
+            <h3>Job List</h3>
             <% if(workers === null) { %>
             <h4 style="margin-top: 50px;">You don't have any jobs running ... :(</h4>
             <a href="/job/create" class="btn btn-success">Create one!</a>
             <% } else { %>
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover" style="margin-top: 50px;">
                 <thead>
                     <tr>
                         <th></th>
-                        <th>#ID</th>
+                        <th>Location</th>
                         <th>Status</th>
+                        <th>Keywords</th>
                         <th>Start Time</th>
                         <th>Stop Time</th>
                         <th>Tweets</th>
-                        <th>Positive</th>
-                        <th>Negative</th>
-                        <th>Neutral</th>
+                        <th>Pos</th>
+                        <th>Neg</th>
+                        <th>Score/Tweet</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,14 +32,21 @@
                             <a href="/job/view/<%= workers[i].id %>" class="btn btn-info">View</a>
                             <button type="button" data-toggle="modal" class="btn btn-danger confirm-delete" data-id="<%= workers[i].id %>">Delete</button>
                         </td>
-                        <td><%= workers[i].id %></td>
+                        <td><%= workers[i].filterData.location %></td>
                         <td><%= workers[i].status %></td>
+                        <td>
+                            <% if (workers[i].filterData.keywords.length === 0) { %>
+                            –
+                            <% } else { %>
+                            <%= workers[i].filterData.keywords %>
+                            <% } %>
+                        </td>
                         <td><%= workers[i].timer.formattedStart %></td>
                         <td><%= workers[i].timer.formattedStop %></td>
                         <td><%= workers[i].sentimentData.tweetCount %></td>
                         <td style="color: green"><%= workers[i].sentimentData.positiveTweets %></td>
                         <td style="color: red"><%= workers[i].sentimentData.negativeTweets %></td>
-                        <td style="color: neutral"><%= workers[i].sentimentData.positiveTweets %></td>
+                        <td style="font-weight: bold;"><%= workers[i].sentimentData.sentimentScorePerTweet.toFixed(4) %></td>
                     </tr>
                     <% } %>
                 </tbody>

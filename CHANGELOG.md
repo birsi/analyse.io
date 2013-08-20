@@ -1,3 +1,9 @@
+## v0.1.0-beta - 20/07/2013
+- **Updated graph visualization**
+- **Implemented keyword based search queries**
+- **Implemented location based search queries**
+- **Updated job view and archive view**
+
 ## v0.0.3 - 17/08/2013
 - **Added mongoDB authorization**
 - **Changed session expires to 1day**

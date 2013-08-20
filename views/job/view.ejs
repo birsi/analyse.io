@@ -2,7 +2,7 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h1>Job View</h1>
+            <h1>Job View – <%= filterData.location %></h1>
             <h5>Status: <span id="top-status"><%= status %></h5>
             <div class="latest-tweet-score"><span id="latestTweetScore">0</span></div>
             <div class="job-view">
@@ -53,10 +53,18 @@
                 </div>
                 <div id="job-settings" class="tab-pane">
                     <div class="well">
-                        Job ID: <b><%= workerId %></b><br>
-                        Job Status: <b><span id="status"><%= status %></b><br>
-                        Job Start: <b><%= timer.formattedStart %></b><br>
-                        Job End: <b><%= timer.formattedStop %></b><br>
+                        ID: <b><%= workerId %></b><br>
+                        Status: <b><span id="status"><%= status %></b><br>
+                        Location: <b><%= filterData.location %></b><br>
+                        Coordinates: <b>(<%= filterData.coordinates.SWLng %>, <%= filterData.coordinates.SWLat %>, <%= filterData.coordinates.NELng %>, <%= filterData.coordinates.NELat %>)</b><br>
+                        Keywords: 
+                        <% if(filterData.keywords.length !== 0) { %>
+                            <b><%= filterData.keywords %> </b>
+                            <% } else { %>
+                            <b>No keywords provided</b>
+                        <% } %><br>
+                        Start: <b><%= timer.formattedStart %></b><br>
+                        End: <b><%= timer.formattedStop %></b><br>
                     </div>
                 </div>
             </div>
@@ -127,9 +135,9 @@
         pieChart.series[0].data[1].update(neuPer);
         pieChart.series[0].data[2].update(negPer);
 
-        columnTweets.series[0].data[0].update(data.positiveTweets);
-        columnTweets.series[1].data[0].update(data.neutralTweets);
-        columnTweets.series[2].data[0].update(data.negativeTweets);
+        columnTweets.series[0].data[0].update(data.sentimentScorePositive);
+        columnTweets.series[1].data[0].update(data.sentimentScore);
+        columnTweets.series[2].data[0].update(data.sentimentScoreNegative);
 
         barTweets.series[0].data[0].update(data.positiveTweets);
         barTweets.series[1].data[0].update(data.neutralTweets);
@@ -149,13 +157,16 @@
     });
 
     // Initial statistics
-    var positivePercentage = (100 / <%= sentimentData.tweetCount %>) * <%= sentimentData.positiveTweets %> || 33,
-        neutralPercentage =  (100 / <%= sentimentData.tweetCount %>) * <%= sentimentData.neutralTweets %> || 33,
-        negativePercentage = (100 / <%= sentimentData.tweetCount %>) * <%= sentimentData.negativeTweets %> || 33,
+    var positivePercentage = (100 / <%= sentimentData.tweetCount %>) * <%= sentimentData.positiveTweets %> || 0,
+        neutralPercentage =  (100 / <%= sentimentData.tweetCount %>) * <%= sentimentData.neutralTweets %> || 1,
+        negativePercentage = (100 / <%= sentimentData.tweetCount %>) * <%= sentimentData.negativeTweets %> || 0,
         positiveTweets = <%= sentimentData.positiveTweets %> || 0,
         neutralTweets = <%= sentimentData.neutralTweets %> || 0,
         negativeTweets = <%= sentimentData.negativeTweets %> || 0,
-        tweetCount = <%= sentimentData.tweetCount %> || 0;
+        tweetCount = <%= sentimentData.tweetCount %> || 0,
+        positiveScore = <%= sentimentData.sentimentScorePositive %> || 0,
+        negativeScore = <%= sentimentData.sentimentScoreNegative %> || 0,
+        sentimentScore = <%= sentimentData.sentimentScore %> || 0;
 
     $(document).ready(function() {
 
@@ -197,19 +208,19 @@
                 name: 'Sentimentent percentage',
                 data: [
                     {
-                        name: 'Positive',
+                        name: 'Positive Tweets',
                         color: '#96C800',
                         y: positivePercentage,
                         sliced: true,
                         selected: true
                     },
                     {
-                        name: 'Neutral',
+                        name: 'Neutral Tweets',
                         color: '#326897',
                         y: neutralPercentage
                     },
                     {
-                        name: 'Negative',
+                        name: 'Negative Tweets',
                         color: '#C80000',
                         y: negativePercentage
                     },
@@ -235,7 +246,7 @@
             },
             yAxis: {
                 title: {
-                    text: 'Tweets'
+                    text: 'Sentiment Scores'
                 }
             },
             xAxis: {
@@ -248,29 +259,29 @@
                     dataLabels: {
                         enabled: true,
                         color: '#000000',
-                        format: '<b>{point.y}</b> {point.name}'
+                        format: '{point.name}: <b>{point.y}</b>'
                     }
                 }
             },
             series: [{
-                name: 'Positive',
+                name: 'Positive Score',
                 data: [{
-                    name: 'Positive',
-                    y: positiveTweets,
+                    name: 'Positive Score',
+                    y: positiveScore,
                     color: '#96C800'
                 }]
             }, {
-                name: 'Neutral',
+                name: 'Score Difference',
                 data: [{
-                    name: 'Neutral',
+                    name: 'Sentiment Score',
                     y: neutralTweets,
                     color: '#326897'
                 }]
             }, {
-                name: 'Negative',
+                name: 'Negative Score',
                 data: [{
-                    name: 'Negative',
-                    y: negativeTweets,
+                    name: 'Negative Score',
+                    y: negativeScore,
                     color: '#C80000'
                 }]
             }]

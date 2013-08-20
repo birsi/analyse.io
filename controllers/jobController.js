@@ -39,7 +39,7 @@ module.exports = function(io, config) {
     });
 
     var stream = tweet.stream('statuses/filter', {
-        locations: [-0.351468299999965, 51.38494009999999, 0.14787969999997586, 51.6723432]
+        locations: [-180,-90,180,90] // The whole world -180,-90,180,90
     });
 
     // Twitter stream handling
@@ -85,6 +85,16 @@ module.exports = function(io, config) {
 
                     // Check if the worker timer has not expired
                     if (item.validateTimer()) {
+
+                        // Check for the right location
+                        if(item.checkLocation(tweet) === false) {
+                            return false;
+                        }
+
+                        // Check if the tweet contains any keyword
+                        if(item.checkKeywords(tweet.text) === false) {
+                            return false;
+                        }
 
                         // Analyse the tweet
                         senti(tweet.text, function(err, result) {
@@ -257,8 +267,9 @@ module.exports = function(io, config) {
                     error = false;
 
                 var coordinates = req.body.coordinates,
+                    centerCoordinates = req.body.centerCoordinates,
                     location = req.body.locationTitle,
-                    keywords = req.body.keywords,
+                    keywords = req.body.keywords.replace(/\s+$/,''), // Trim trailing spaces (rtrim)
                     timer = req.body.timer;
 
                 var worker = null;
@@ -267,6 +278,27 @@ module.exports = function(io, config) {
                 if (timer <= 0 || timer > 24) {
                     error = true;
                     req.flash('error', 'The timer is not valid!');
+                }
+                if(keywords !== '') {
+                    // If keywords are provided, put them in an array
+                    keywords = keywords.split(' ');
+                }
+                if(coordinates === '') {
+                    error = true;
+                    req.flash('error', 'You need to enter a valid location! (Country, city, or region)');
+                }
+                if(coordinates !== '') {
+                    coordinates = coordinates.split(',');
+                    coordinates = {
+                        SWLng: coordinates[0],
+                        SWLat: coordinates[1],
+                        NELng: coordinates[2],
+                        NELat: coordinates[3]
+                    };
+                }
+                if(centerCoordinates !== '') {
+                    centerCoordinates = centerCoordinates.split(',');
+                    coordinates.centerCoordinates = [centerCoordinates[0], centerCoordinates[1]];
                 }
 
                 // If no error occurs, create the job (without any data, except the user id)
@@ -453,6 +485,7 @@ module.exports = function(io, config) {
                 title: 'Job',
                 user: user,
                 workerId: workerId,
+                filterData: worker.getFilterData(),
                 streamData: worker.getStreamData(),
                 sentimentData: worker.getSentimentData(),
                 timer: worker.getTimer(),
@@ -512,6 +545,7 @@ module.exports = function(io, config) {
                         title: 'Job - Archive',
                         user: user,
                         workerId: jobId,
+                        filterData: job.filterData,
                         streamData: job.streamData,
                         sentimentData: job.sentimentData,
                         timer: job.timer,

@@ -1,7 +1,7 @@
 /*!
  * coordinates.io
  *
- * app.js
+ * coordinates.js (http://coordinates.io)
  * Author: Michael Birsak
  * Version: 0.0.1
  *
@@ -26,11 +26,9 @@
 			map: document.getElementById('map'),
 			searchInput: document.getElementById('location'),
 			$searchInput: $('#location'),
-			$swLat: $('#coordinates-swlat'),
-			$swLng: $('#coordinates-swlng'),
-			$neLat: $('#coordinates-nelat'),
-			$neLng: $('#coordinates-nelng'),
-			$point: $('#coordinates-point')
+            $locationTitle: $('#locationTitle'),
+			$coordinates: $('#coordinates'),
+            $centerCoordinates: $('#centerCoordinates')
 
 		},
 
@@ -56,7 +54,7 @@
 				mapTypeControl: true,
 				mapTypeControlOptions: {
 					style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-					position: google.maps.ControlPosition.BOTTOM_CENTER
+					position: google.maps.ControlPosition.TOP_RIGHT
 				},
 				mapTypeId: google.maps.MapTypeId.SATELLITE
 			};
@@ -185,12 +183,8 @@
 				// Set the marker
 				App.setMarker(App.options.locationCenter);
 
-				// Set N/A for boundaries
-				App.elements.$swLat.html("N/A");
-				App.elements.$swLng.html("N/A");
-				App.elements.$neLat.html("N/A");
-				App.elements.$neLng.html("N/A");
-
+				// Set the coordinates value to empty string
+				App.elements.$coordinates.val('');
 
 			}
 
@@ -213,13 +207,8 @@
 		 **/
 		setMarker: function(position) {
 
-			var markerPositionText = position.lat() + " , " + position.lng();
-
 			// Set the marker on the map
 			App.marker.setPosition(position);
-
-			// Update DOM elements
-			App.elements.$point.html(markerPositionText);
 
 		},
 
@@ -231,13 +220,10 @@
 
 			var sw = App.rectangle.bounds.getSouthWest(),
 				ne = App.rectangle.bounds.getNorthEast(),
-				rectanglePositionText = sw.lng() + " , " + sw.lat() + " , " + ne.lng() + " , " + ne.lat();
+				coordinates = sw.lng() + "," + sw.lat() + "," + ne.lng() + "," + ne.lat();
 
-			// Update DOM elements
-			App.elements.$swLat.html(sw.lat());
-			App.elements.$swLng.html(sw.lng());
-			App.elements.$neLat.html(ne.lat());
-			App.elements.$neLng.html(ne.lng());
+			// Update DOM element
+			App.elements.$coordinates.val(coordinates);
 
 
 		},
@@ -253,9 +239,15 @@
 			App.options.locationCenter = place.geometry.location;
 			App.options.bounds = place.geometry.viewport;
 
+            // Get location title
+            var locationTitle = place.formatted_address;
+            App.elements.$locationTitle.val(locationTitle);
+
 			// Set location
 			App.setLocation();
 
+            // Set the location center
+            App.elements.$centerCoordinates.val(place.geometry.location.lng() + ',' + place.geometry.location.lat());
 		},
 
 		/**

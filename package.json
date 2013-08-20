@@ -28,7 +28,8 @@
     "bcrypt": "*",
     "nodemailer" : "*",
     "sentiment" : "*",
-    "moment" : "*"
+    "moment" : "*",
+    "point-in-polygon" : "*"
   },
   "devDependencies": {
     "mocha"    :  "1.12.x"

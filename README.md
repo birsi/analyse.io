@@ -5,15 +5,15 @@ analyse.io is a simple application to analyse the sentiment of twitter status up
 Author: Michael Birsak  
 Contact: [michael@birsak.net](mailto:michael@birsak.net) / [mb1668@live.mdx.ac.uk](mailto:mb1668@live.mdx.ac.uk)
 
-Version: 0.0.3  
-Date: 17/08/2013
+Version: 0.1.0-beta
+Date: 20/08/2013
 
 Version Control: [https://bitbucket.org/birsi/analyseio](https://bitbucket.org/birsi/analyseio)
 
 ##Development
 The current unstable development version is live available at  
 [http://node.birsak.org](http://node.birsak.org)  
-**Current live version: 0.0.2 (Prototype)**
+**Current live version: 0.1.0-beta (Final Beta Version)**
 
 ##Installation and usage
     // Change to app dir
@@ -30,10 +30,13 @@ Change the port if needed in analyse.io/config/express.js
     app.set('port', process.env.PORT || 80);
 
 ##Todo
-* Implement location based search job
-* Implement keyword based search job
+* Handle real time graph visualization for > 100 tweets/second
+* Implement unit tests
+* Code refactoring
 
 ## Recent changes (or see CHANGELOG.md)
+* Implement location based search job ✓
+* Implement keyword based search job ✓
 * Implement seperate job creation and job view ✓
 * Implement possibility of having multiple jobs (active workers) per user ✓
 * Implement job save possibility and job archive ✓
