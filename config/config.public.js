@@ -21,44 +21,56 @@ var path = require('path'),
 module.exports = {
     development: {
         rootPath: rootPath,
-        db: 'mongodb://localhost/analyseio',
+        db: {
+            host: "mongodb://localhost/analyseio",
+            user: '***',
+            pass: '***'
+        },
         app: {
             name: 'analyse.io'
         },
         twitter: {
             clientID: "***",
             clientSecret: "***",
-            accessToken: "***",
+            accessToken: "***-***",
             accessTokenSecret: "***",
             callbackURL: "http://dev.birsak.net/auth/twitter/callback"
         }
     },
     test: {
         rootPath: rootPath,
-        db: 'mongodb://localhost/analyseio',
+        db: {
+            host: 'mongodb://localhost/analyseio',
+            user: '***',
+            pass: '***'
+        },
         app: {
             name: 'analyse.io'
         },
         twitter: {
             clientID: "***",
             clientSecret: "***",
-            accessToken: "***",
+            accessToken: "***-***",
             accessTokenSecret: "***",
             callbackURL: "http://dev.birsak.net/auth/twitter/callback"
         }
     },
     production: {
         rootPath: rootPath,
-        db: 'mongodb://node.birsak.org/analyseio',
+        db: {
+            host: 'mongodb://node.birsak.org/analyseio',
+            user: '***',
+            pass: '***'
+        },
         app: {
             name: 'analyse.io'
         },
         twitter: {
             clientID: "***",
             clientSecret: "***",
-            accessToken: "***",
+            accessToken: "***-***",
             accessTokenSecret: "***",
-            callbackURL: "http://dev.birsak.net/auth/twitter/callback"
+            callbackURL: "http://node.birsak.org/auth/twitter/callback"
         }
     }
 };

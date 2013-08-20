@@ -30,6 +30,7 @@ Change the port if needed in analyse.io/config/express.js
     app.set('port', process.env.PORT || 80);
 
 ##Todo
+* Twitter login user creation problem
 * Handle real time graph visualization for > 100 tweets/second
 * Implement unit tests
 * Code refactoring

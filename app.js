@@ -71,7 +71,7 @@ require(routesPath + 'job')(app, passport, jobController);
  **/
 server.listen(app.get('port'), function() {
     console.log('\n-----------------------------------------------\n'.rainbow +
-                'Analyse.io is up and running on port '.bold.green + 80 + '\n' +
+                'Analyse.io is up and running on port '.bold.green + app.get('port') + '\n' +
                 '-----------------------------------------------\n'.rainbow);
 });
 
