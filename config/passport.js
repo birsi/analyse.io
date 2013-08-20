@@ -91,7 +91,7 @@ module.exports = function(app, passport, config) {
     }, function(token, tokenSecret, profile, done) {
         // Check if the user has already an account
         User.findOne({
-            'twitter.id': profile.id
+            email: profile.id
         }, function(err, user) {
             if (err) {
                 return done(err);
