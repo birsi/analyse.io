@@ -5,7 +5,7 @@ analyse.io is a simple application to analyse the sentiment of twitter status up
 Author: Michael Birsak  
 Contact: [michael@birsak.net](mailto:michael@birsak.net) / [mb1668@live.mdx.ac.uk](mailto:mb1668@live.mdx.ac.uk)
 
-Version: 0.1.0-beta
+Version: 0.1.1-beta
 Date: 20/08/2013
 
 Version Control: [https://bitbucket.org/birsi/analyseio](https://bitbucket.org/birsi/analyseio)
@@ -13,7 +13,7 @@ Version Control: [https://bitbucket.org/birsi/analyseio](https://bitbucket.org/b
 ##Development
 The current unstable development version is live available at  
 [http://node.birsak.org](http://node.birsak.org)  
-**Current live version: 0.1.0-beta (Final Beta Version)**
+**Current live version: 0.1.1-beta (Final Beta Version)**
 
 ##Installation and usage
     // Change to app dir
