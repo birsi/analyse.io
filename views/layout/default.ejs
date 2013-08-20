@@ -22,8 +22,11 @@
           </button>
 
           <!-- Be sure to leave the brand out there if you want it shown -->
+          <% if(typeof userLoggedIn === "undefined" || userLoggedIn.name === '') { %>
           <a class="navbar-brand" href="/">analyse.io</a>
-
+          <% } else { %>
+          <a class="navbar-brand" href="/job/list">analyse.io</a>
+          <% } %>
           <!-- Place everything within .nav-collapse to hide it until above 768px -->
           <div class="nav-collapse collapse navbar-responsive-collapse">
             <% if(typeof userLoggedIn === "undefined" || userLoggedIn.name === '') { %>

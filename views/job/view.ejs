@@ -12,8 +12,13 @@
                     <li><a href="#job-settings" data-toggle="tab">Job Settings</a></li>
                     <% if(status !== "Finished") { %>
                     <span id="controls" class="pull-right">
+                        <% if(status === "Paused") { %>
                         <input type="button" id="start" class="btn btn-success" value="Resume">
+                        <input type="button" id="pause" class="btn btn-info" style="display:none" value="Pause Tracking">
+                        <% } else { %>
+                        <input type="button" id="start" class="btn btn-success" style="display:none" value="Resume">
                         <input type="button" id="pause" class="btn btn-info" value="Pause Tracking">
+                        <% } %>
                         <a href="/job/save/<%= workerId %>" id="save" class="btn btn-danger">Stop & Save</a>
                     </span>
                     <% } %>
@@ -121,6 +126,14 @@
         $('#status, #top-status').html(data);
         if(data === "Finished" || data === "Worker timed out") {
             $('#controls').hide();
+        } else {
+            if(data === "Paused") {
+                $('#pause').hide();
+                $('#start').show();
+            } else {
+                $('#pause').show();
+                $('#start').hide();
+            }
         }
     });
 
@@ -185,6 +198,9 @@
                 plotShadow: false,
                 backgroundColor:'rgba(255, 255, 255, 0.1)'
             },
+            credits: {
+                enabled: false
+            },
             title: {
                 text: null
             },
@@ -237,6 +253,9 @@
                 plotBorderWidth: null,
                 plotShadow: false,
                 backgroundColor:'rgba(255, 255, 255, 0.1)'
+            },
+            credits: {
+                enabled: false
             },
             title: {
                 text: null
@@ -297,6 +316,9 @@
                 plotShadow: false,
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
                 height: 150
+            },
+            credits: {
+                enabled: false
             },
             title: {
                 text: null

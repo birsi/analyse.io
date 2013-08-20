@@ -1,3 +1,10 @@
+## v.0.1.1-beta - 20/07/2013
+- **Fixed bugs within the passport twitter auth**
+- **Fixed user model bugs**
+- **Job view (Start/Resume button) updated**
+- **analyse.io logo link now redirects to /job/list instead of /profile**
+- **Updated analyseWorker to only save important Tweet data**
+
 ## v0.1.0-beta - 20/07/2013
 - **Updated graph visualization**
 - **Implemented keyword based search queries**

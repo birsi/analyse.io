@@ -81,10 +81,7 @@ UserSchema
 UserSchema
     .path('email')
     .validate(function(email, respond) {
-        // Only validate if the user doesn't login via twitter
-        if (authTypes.indexOf(this.provider) !== -1) {
-            respond(true);
-        }
+
         // Asynchronous validation to see if a user with this email already exists
         var User = mongoose.model('User');
         if (this.isNew || this.isModified('email')) {

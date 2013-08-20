@@ -15,5 +15,5 @@ node_modules/
 
 # Config files #
 ######################
-config/config.js
-config/mail.js
+#config/config.js
+#config/mail.js

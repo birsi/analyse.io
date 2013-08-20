@@ -100,7 +100,7 @@ module.exports = function(app, passport, config) {
             if (!user) {
                 user = new User({
                     name: profile.displayName,
-                    username: profile.username,
+                    email: profile.id,
                     provider: 'twitter',
                     twitter: profile._json
                 });
