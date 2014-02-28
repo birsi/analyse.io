@@ -17,6 +17,7 @@ The current unstable development version is live available at
 
 ##Installation and usage
     1) Set up a MongoDB server
+    2) Set up a Twitter app and get your credentials
     2) Rename config/config.public.js to config/config.js
     3) Rename config/mail.public.js to config/mail.js
     4) Modfiy the configuration files
