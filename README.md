@@ -16,6 +16,9 @@ The current unstable development version is live available at
 **Current live version: 0.1.1-beta (Final Beta Version)**
 
 ##Installation and usage
+    1) Rename config/config.public.js to config/config.js to create your own configuration
+    2) Rename config/mail.public.js to config/mail.js to create your own configuration
+
     // Change to app dir
     cd analyse.io
 
