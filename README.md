@@ -8,7 +8,7 @@ Contact: [michael@birsak.net](mailto:michael@birsak.net) / [mb1668@live.mdx.ac.u
 Version: 0.1.1-beta
 Date: 20/08/2013
 
-Version Control: [https://bitbucket.org/birsi/analyseio](https://bitbucket.org/birsi/analyseio)
+~~Version Control: [https://bitbucket.org/birsi/analyseio](https://bitbucket.org/birsi/analyseio)~~
 
 ##Development
 The current unstable development version is live available at  
