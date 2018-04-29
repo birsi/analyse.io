@@ -12,8 +12,8 @@ Version Control: [https://bitbucket.org/birsi/analyseio](https://bitbucket.org/b
 
 ##Development
 The current unstable development version is live available at  
-[http://node.birsak.org](http://node.birsak.org)  
-**Current live version: 0.1.1-beta (Final Beta Version)**
+~~[http://node.birsak.org](http://node.birsak.org)  
+**Current live version: 0.1.1-beta (Final Beta Version)**~~
 
 ##Installation and usage
     1) Set up a MongoDB server
