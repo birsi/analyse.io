@@ -1,6 +1,6 @@
 # analyse.io
 ## Introduction
-analyse.io is a simple application to analyse the sentiment of twitter status updates, defined in a specific geographical region.
+analyse.io is a simple application to analyse the sentiment of twitter status updates, defined in a specific geographical region and was impleme.
 
 Author: Michael Birsak  
 Contact: [michael@birsak.net](mailto:michael@birsak.net) / ~~[mb1668@live.mdx.ac.uk](mailto:mb1668@live.mdx.ac.uk)~~
@@ -10,12 +10,12 @@ Date: 20/08/2013
 
 ~~Version Control: [https://bitbucket.org/birsi/analyseio](https://bitbucket.org/birsi/analyseio)~~
 
-##Development
+## Development
 The current unstable development version is live available at  
 ~~[http://node.birsak.org](http://node.birsak.org)  
 **Current live version: 0.1.1-beta (Final Beta Version)**~~
 
-##Installation and usage
+## Installation and usage
     1) Set up a MongoDB server
     2) Set up a Twitter app and get your credentials
     3) Rename config/config.public.js to config/config.js
@@ -35,7 +35,7 @@ Change the port if needed in analyse.io/config/express.js
 
     app.set('port', process.env.PORT || 80);
 
-##Todo
+## Todo
 * Twitter login user creation problem
 * Handle real time graph visualization for > 100 tweets/second
 * Implement unit tests
