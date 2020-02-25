@@ -19,7 +19,7 @@
     "ejs-locals": "*",
     "twit": "1.1.9",
     "async": "0.2.9",
-    "mongoose": "3.6.15",
+    "mongoose": "5.9.2",
     "passport": "*",
     "passport-local": "*",
     "passport-twitter": "*",
