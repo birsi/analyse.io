@@ -13,7 +13,7 @@
   },
   "dependencies" : {
     "colors"   :  "*",
-    "express": "3.3.4",
+    "express": "4.17.1",
     "socket.io" : "0.9.16",
     "ejs": "*",
     "ejs-locals": "*",
